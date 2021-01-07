@@ -12,6 +12,9 @@ class Board(models.Model):
     title = models.CharField(blank=False, null=False, max_length=250, verbose_name="Title")
     create_time = models.DateTimeField(auto_now=True, blank=False, verbose_name="Time of creation")
 
+    def __str__(self):
+        return self.title
+
 class BoardUser(models.Model):
     class Meta:
         db_table = "board_users"
@@ -23,6 +26,9 @@ class BoardUser(models.Model):
     is_owner = models.BooleanField(default=False, blank=False, null=False, verbose_name="Board owner")
     is_read_only = models.BooleanField(default=False, blank=False, null=False, verbose_name="Board can be modified")
 
+    def __str__(self):
+        return self.user.name
+
 class BoardColumn(models.Model):
     class Meta:
         db_table = "board_columns"
@@ -33,6 +39,10 @@ class BoardColumn(models.Model):
     title = models.CharField(blank=False, null=False, max_length=250, verbose_name="Title")
     create_time = models.DateTimeField(auto_now=True, blank=False, verbose_name="Time of creation")
     sort_index = models.IntegerField(blank=False, default=99, verbose_name="Sort index")
+
+    def __str__(self):
+        return self.title
+
 
 class BoardCard(models.Model):
     class Meta:
@@ -47,6 +57,9 @@ class BoardCard(models.Model):
     create_time = models.DateTimeField(auto_now=True, blank=False, verbose_name="Time of creation")
     sort_index = models.IntegerField(blank=False, default=99, verbose_name="Sort index")
 
+    def __str__(self):
+        return self.title
+
 class BoardUserExecutor(models.Model):
     class Meta:
         db_table = "board_user_executors"
@@ -54,7 +67,10 @@ class BoardUserExecutor(models.Model):
         verbose_name_plural = "Board user executors"
 
     user = models.ForeignKey(User, blank=False, null=False, verbose_name="User", on_delete=models.CASCADE)
-    card = models.ForeignKey(BoardCard, blank=False, null=False, verbose_name="User", on_delete=models.CASCADE)
+    card = models.ForeignKey(BoardCard, blank=False, null=False, verbose_name="Card", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.name
 
 class BoardCardComment(models.Model):
     class Meta:
@@ -66,3 +82,6 @@ class BoardCardComment(models.Model):
     card = models.ForeignKey(BoardCard, blank=False, null=False, verbose_name="User", on_delete=models.CASCADE)
     message = models.CharField(blank=True, null=True, max_length=5000, verbose_name="Message")
     create_time = models.DateTimeField(auto_now=True, blank=False, verbose_name="Time of creation")
+
+    def __str__(self):
+        return self.user.name + " " + self.card.title + " " + self.message
